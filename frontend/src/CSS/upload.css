@@ -1,0 +1,70 @@
+/* 🔹 Body Background */
+body {
+    background-color: #f7f9fc; /* Light grayish blue */
+    color: #007bff; /* Bright blue text */
+}
+
+#file-input {
+    display: none;
+}
+
+/* 🔹 Move Content Down */
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: calc(100vh - 80px); /* Make sure it doesn't touch the header */
+    width: 100%;
+}
+
+/* 🔹 Upload Section */
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 🔹 Upload Icon */
+.upload-image {
+    width: 150px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    transition: 0.3s;
+}
+
+.upload-image:hover {
+    opacity: 0.4;
+    
+}
+
+.upload-image:active {
+    transform: scale(0.95);
+    
+}
+
+/* 🔹 Upload Button */
+button {
+    background-color: #007bff; /* Strong blue for contrast */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+h4{
+    color: black;
+}
