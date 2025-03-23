@@ -11,7 +11,7 @@ export default function Header() {
 
             {/* Right side: GitHub Link */}
             <div className="right">
-                <a href="https://github.com/MohammedMawi" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/MohammedMawi/Data-Analyzer/tree/master" target="_blank" rel="noopener noreferrer">
                     <img className="git" src="/images/github2.png" alt="GitHub" />
                 </a>
             </div>

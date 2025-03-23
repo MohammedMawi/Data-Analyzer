@@ -22,7 +22,7 @@ export default function Upload() {
 
     // Now that we have the file selected by the user in the file state, we can create a new FormData object and append the file
     const formData = new FormData(); // Create a new FormData object
-    formData.append("file", file); // We append the file to the FormData object in order to send it to the server
+    formData.append("file-input", file); // We append the file to the FormData object in order to send it to the server
 
     // fetch is how React (frontend) communicates with Flask (backend). Sends request to flask at http://127.0.0.1:5000/.
     // 127.0.0.1 → This is your own computer (localhost).
@@ -38,7 +38,7 @@ export default function Upload() {
 
       const data = await response.json(); // We wait for the response from the server and then we convert it to JSON format
 
-      // If the response is ok, we set the message state to the message we get from the server. If the response is not ok, we set the message state to the error message we get from the server.
+      // If the response is ok, we set the message state to the message we get from the json in the server. If the response is not ok, we set the message state to the error message we get from the server.
       if(response.ok){
         setMessage(data.message);
       }

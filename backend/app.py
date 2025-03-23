@@ -17,11 +17,11 @@ def upload_file():
     print("🔍 Received request at /upload")  # ✅ Debugging log
 
     # Check if the request contains files
-    if "file" not in request.files:
+    if "file-input" not in request.files:
         print("❌ No file found in request.files!")  # ✅ Debugging log
         return jsonify({"error": "No file part"}), 400
 
-    file = request.files["file"]
+    file = request.files["file-input"]
 
     if file.filename == "":
         print("❌ No file selected!")  # ✅ Debugging log
@@ -33,6 +33,9 @@ def upload_file():
 
     print(f"✅ File '{file.filename}' uploaded successfully!")  # ✅ Debugging log
     return jsonify({"message": f"File '{file.filename}' uploaded successfully!"})
+
+# @app.route('/analyze', methods=['POST'])
+
 
 if __name__ == "__main__":
     app.run(debug=True)
