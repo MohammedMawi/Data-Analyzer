@@ -12,9 +12,9 @@ ALLOWED_EXTENSIONS = {'csv'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/upload', methods=['POST'])
+@app.route('/', methods=['POST'])
 def upload_file():
-    print("🔍 Received request at /upload")  # ✅ Debugging log
+    print("🔍 Received request at /")  # ✅ Debugging log
 
     # Check if the request contains files
     if "file-input" not in request.files:

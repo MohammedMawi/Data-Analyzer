@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../CSS/upload.css";
 import Header from "./Header";
 
@@ -7,6 +8,7 @@ export default function Upload() {
 
   const [file, setFile] = React.useState(null);
   const [message, setMessage] = React.useState("");
+  const navigate = useNavigate(); // react router hook to navigate to different pages
 
   // What this function does is it take the event object as an argument which is taken from the file input field and then we say files[0] to take the first file selected by the user from the files array and set it to the file state.
   const getFile = (event) => {
@@ -31,7 +33,7 @@ export default function Upload() {
     // method: "POST" tells fetch() to send a POST request which are used to send data to server
     // body: formData is the actual file we are sending
     try{
-      const response = await fetch("http://127.0.0.1:5000/upload", {
+      const response = await fetch("http://127.0.0.1:5000/", {
         method: "POST",
         body: formData,
       });
@@ -41,6 +43,7 @@ export default function Upload() {
       // If the response is ok, we set the message state to the message we get from the json in the server. If the response is not ok, we set the message state to the error message we get from the server.
       if(response.ok){
         setMessage(data.message);
+        navigate("/analyze"); // ✅ automatically go to analyze page after successful upload
       }
       else{
         setMessage(data.error);
@@ -55,9 +58,7 @@ export default function Upload() {
 
   return (
     <>
-        <div>
-            <Header />
-        </div>
+        <Header />
 
         <div className="container">
             <h1>Upload Dataset</h1>
