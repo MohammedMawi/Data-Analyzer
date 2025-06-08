@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../CSS/upload.css";
 import Header from "./Header";
 
-
 export default function Upload() {
 
   const [file, setFile] = React.useState(null);
@@ -19,7 +18,7 @@ export default function Upload() {
   const handleFileUpload = async () => {
     // if user clicks upload without selecting any file
     if(file === null) {
-      return;
+      return setMessage("Please select a file to upload.");
     }
 
     // Now that we have the file selected by the user in the file state, we can create a new FormData object and append the file

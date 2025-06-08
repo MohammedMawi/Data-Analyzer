@@ -1,0 +1,33 @@
+.sidebar {
+    width: 180px;
+    background-color: #ffffff;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    top: 90px; /* below the header */
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: none;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.sidebar button:hover {
+    background-color: #d0d0d0;
+}
+
+.feature-list {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #333;
+}

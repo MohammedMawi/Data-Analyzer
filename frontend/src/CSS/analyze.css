@@ -1,0 +1,67 @@
+.analyze-container {
+    padding-top: 80px; /* Match the height of the header */
+    text-align: center;
+    display: flex;
+    height: calc(100vh - 80px); 
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fafafa;
+    overflow-x: hidden;     /* Prevent horizontal overflow */
+}
+
+.dataset-display {
+    position: relative;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 0;
+    margin-left: 220px;
+    margin-bottom: 20px;
+    height: 400px;
+    overflow: hidden; /* Don't scroll the container itself */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dataset-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.table-wrapper {
+    flex: 1;
+    overflow: auto;
+}
+
+.table-wrapper table {
+    width: max-content;
+    min-width: 100%;
+    white-space: nowrap;
+}
+
+table {
+    width: max-content;                /* Allow wide tables */
+    min-width: 100%;                   /* Prevent shrinking */
+    white-space: nowrap;              /* Prevent cell wrapping */
+    overflow-x: auto;                  /* Just in case */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
