@@ -60,7 +60,7 @@ def get_data():
 
     return jsonify({
         "columns": list(clean_df.columns), # Get the column names of the dataframe
-        "rows": clean_df.head(100).to_dict(orient="records") # Convert the dataframe to a list of dictionaries, where where keys are the column names for a row
+        "rows": clean_df.head(100).to_dict(orient="records") # Convert the dataframe to a list of dictionaries, where keys are the column names for a row
     })
 
 if __name__ == "__main__":

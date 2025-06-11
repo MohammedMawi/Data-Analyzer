@@ -27,7 +27,7 @@
     flex-direction: column;
 }
 
-.dataset-header {
+/* .dataset-header {
     position: sticky;
     top: 0;
     background-color: white;
@@ -35,7 +35,7 @@
     text-align: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
-}
+} */
 
 .table-wrapper {
     flex: 1;

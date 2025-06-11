@@ -41,6 +41,7 @@ export default function Analyze() {
                 <div className="dataset-header">
                   <h2>Dataset Display</h2>
                 </div>
+                
                  <div className="table-wrapper">
                   {/* Show error if there is one */}
                   {error && <p style={{color: "red"}}>{error}</p>}
