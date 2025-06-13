@@ -1,0 +1,28 @@
+.table-wrapper {
+    flex: 1;
+    overflow: auto;
+}
+
+.table-wrapper table {
+    width: max-content;
+    min-width: 100%;
+    white-space: nowrap;
+}
+
+table {
+    width: max-content;                /* Allow wide tables */
+    min-width: 100%;                   /* Prevent shrinking */
+    white-space: nowrap;              /* Prevent cell wrapping */
+    overflow-x: auto;                  /* Just in case */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
