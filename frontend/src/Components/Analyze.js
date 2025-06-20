@@ -8,6 +8,8 @@ export default function Analyze() {
     const [data, setData] = useState(null); // For table data
     const [error, setError] = useState(""); // For any fetch errors
 
+    const [targetColumn, setTargetColumn] = useState(""); // For target column selection
+
     // useEffect is a React hook that runs a function after the component is rendered. It's second parameter is an empty array, which means it will only run once when the page loads
     useEffect(() => {
       fetch("http://127.0.0.1:5000/data") // Fetch data from the Flask backend at /data 
@@ -35,7 +37,11 @@ export default function Analyze() {
     <>
       <Header />
       <div className="analyze-container">
-        <Sidebar />
+        <Sidebar   
+          columns={data ? data.columns : []} //Pass empty array if data not yet loaded since you have to wait for fetch to finish
+          targetColumn={targetColumn} 
+          setTargetColumn={setTargetColumn}/>
+          
         <div className="main-content">
             <div className="dataset-display">
               <Table data={data} error={error}/>

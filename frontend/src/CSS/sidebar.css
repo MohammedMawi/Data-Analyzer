@@ -31,3 +31,22 @@
     font-size: 14px;
     color: #333;
 }
+
+.target-section {
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.target-section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+#target-select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
