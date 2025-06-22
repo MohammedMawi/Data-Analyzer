@@ -9,6 +9,13 @@ export default function Analyze() {
     const [error, setError] = useState(""); // For any fetch errors
 
     const [targetColumn, setTargetColumn] = useState(""); // For target column selection
+    const [featureColumns, setFeatureColumns] = useState([]); // For feature columns selection
+
+    const removeFeature = (featureToRemove) => {
+      setFeatureColumns((prev) =>
+        prev.filter(feature => feature !== featureToRemove) // Use filter to go through the previous elements and return a new array that does not include the feature to remove
+      );
+    };
 
     // useEffect is a React hook that runs a function after the component is rendered. It's second parameter is an empty array, which means it will only run once when the page loads
     useEffect(() => {
@@ -40,7 +47,11 @@ export default function Analyze() {
         <Sidebar   
           columns={data ? data.columns : []} //Pass empty array if data not yet loaded since you have to wait for fetch to finish
           targetColumn={targetColumn} 
-          setTargetColumn={setTargetColumn}/>
+          setTargetColumn={setTargetColumn}
+          featureColumns={featureColumns}
+          setFeatureColumns={setFeatureColumns}
+          removeFeature={removeFeature}
+        />
           
         <div className="main-content">
             <div className="dataset-display">
