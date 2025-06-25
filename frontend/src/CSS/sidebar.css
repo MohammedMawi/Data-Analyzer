@@ -26,12 +26,6 @@
     background-color: #d0d0d0;
 }
 
-/* .feature-list {
-    margin: 10px 0;
-    font-size: 14px;
-    color: #333;
-} */
-
 .target-section {
     margin-bottom: 20px;
     font-size: 14px;
@@ -67,6 +61,12 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+
+  /* Fix overflow and make sure the ❌ stays visible */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .feature-item:hover {
@@ -75,10 +75,22 @@
 
 .remove-icon {
   display: none;
-  margin-left: 10px;
-  color: red;
 }
 
 .feature-item:hover .remove-icon {
   display: inline;
+}
+
+.feature-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-grow: 1;
+}
+
+.selected-features-scroll {
+  max-height: 200px;  /* You can adjust this */
+  overflow-y: auto;
+  padding-right: 4px; /* Avoid scrollbar overlap */
+  margin-bottom: 15px;
 }

@@ -13,7 +13,7 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
             onChange = {(e) => setTargetColumn(e.target.value)} // When user picks an option, update the state with the selected value
             value={targetColumn}  // Set the value of the select to the current targetColumn state
           >
-            <option value="">-- Select a column --</option>
+            <option value="" disabled>-- Select a Column --</option>
             {columns.map((col) => (
               <option key={col} value={col}>
                 {col}
@@ -52,28 +52,24 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
       {/* Display Selected Features */}
       <div className='selected-features'>
         <strong>Selected Features:</strong>
-        <ul> 
-           {/* Map through featureColumns to create a list of selected features */}
-          {featureColumns.map(col => 
-            <li
-              key={col}
-              className='feature-item'
-              onClick={() => removeFeature(col)}
-              title="Click to remove"
-            >
-              {col}
-              <span className='remove-icon'>❌</span>
-            </li>
-          )}
-        </ul>
+        <div className="selected-features-scroll">
+          <ul> 
+            {/* Map through featureColumns to create a list of selected features */}
+            {featureColumns.map(col => 
+              <li
+                key={col}
+                className='feature-item'
+                onClick={() => removeFeature(col)}
+                title="Click to remove"
+              >
+                <span className="feature-text">{col}</span>
+                <span className="remove-icon">❌</span>
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
 
-      <button>All</button>
-      <div className="feature-list">
-        <p>Feature 1</p>
-        <p>Feature 2</p>
-        {/* Later we’ll render this dynamically from the dataset */}
-      </div>
       <button>Correlation</button>
       <button>Summary Stats</button>
       <button>Graphs</button>
