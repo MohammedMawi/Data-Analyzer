@@ -11,6 +11,9 @@ export default function Analyze() {
     const [targetColumn, setTargetColumn] = useState(""); // For target column selection
     const [featureColumns, setFeatureColumns] = useState([]); // For feature columns selection
 
+    const [selectedGraph, setSelectedGraph] = useState(null);
+    const [selectedInfo, setSelectedInfo] = useState(null);
+
     const removeFeature = (featureToRemove) => {
       setFeatureColumns((prev) =>
         prev.filter(feature => feature !== featureToRemove) // Use filter to go through the previous elements and return a new array that does not include the feature to remove
@@ -51,6 +54,8 @@ export default function Analyze() {
           featureColumns={featureColumns}
           setFeatureColumns={setFeatureColumns}
           removeFeature={removeFeature}
+          setSelectedGraph={setSelectedGraph}
+          setSelectedInfo={setSelectedInfo}
         />
           
         <div className="main-content">

@@ -94,3 +94,16 @@
   padding-right: 4px; /* Avoid scrollbar overlap */
   margin-bottom: 15px;
 }
+
+.dropdown-section {
+  margin-top: 20px;
+}
+
+.dropdown-section select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}

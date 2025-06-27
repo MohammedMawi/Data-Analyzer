@@ -1,7 +1,7 @@
 import React from 'react';
 import '../CSS/sidebar.css';
 
-export default function Sidebar({columns, targetColumn, setTargetColumn, featureColumns, setFeatureColumns, removeFeature}) {
+export default function Sidebar({columns, targetColumn, setTargetColumn, featureColumns, setFeatureColumns, removeFeature, setSelectedGraph, setSelectedInfo}) {
   return (
     <div className="sidebar">
 
@@ -70,10 +70,36 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
         </div>
       </div>
 
-      <button>Correlation</button>
-      <button>Summary Stats</button>
-      <button>Graphs</button>
-      <button>Data Cleaning</button>
+      {/* Graph Display Dropdown */}
+      <div className="dropdown-section">
+        <label><strong>Graph Display</strong></label>
+
+        <select
+          onChange={(e => console.log("Selected Graph: ", e.target.value))}
+          defaultValue=""
+        >
+          <option value="" disabled>-- Select a Graph --</option>
+          <option value="bar">Bar Graph</option>
+          <option value="line">Line Graph</option>
+          <option value="scatter">Scatter Plot</option>
+          <option value="box">Box Plot</option>
+        </select>
+      </div>
+
+      {/* Data Info Dropdown */}
+      <div className="dropdown-section">
+        <label><strong>Data Info</strong></label>
+        <select
+          onChange={(e) => console.log("Selected data info:", e.target.value)}
+          defaultValue=""
+        >
+          <option value="" disabled>-- Choose info type --</option>
+          <option value="correlation">Correlation</option>
+          <option value="summary">Summary Stats</option>
+          <option value="cleaning">Data Cleaning</option>
+        </select>
+      </div>
+
     </div>
   );
 }
