@@ -62,6 +62,20 @@ export default function Analyze() {
             <div className="dataset-display">
               <Table data={data} error={error}/>
             </div>
+
+          {selectedGraph && (
+            <div className="analysis-view">
+              <h3>Graph View: {selectedGraph}</h3>
+              <p>(Placeholder for {selectedGraph} graph)</p>
+            </div>
+          )}
+
+          {selectedInfo && (
+            <div className="analysis-view">
+              <h3>Data Info View: {selectedInfo}</h3>
+              <p>(Placeholder for {selectedInfo} data info)</p>
+            </div>
+          )}
         </div>
       </div>
     </>

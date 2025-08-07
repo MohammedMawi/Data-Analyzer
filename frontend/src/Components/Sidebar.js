@@ -75,14 +75,17 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
         <label><strong>Graph Display</strong></label>
 
         <select
-          onChange={(e => console.log("Selected Graph: ", e.target.value))}
+          onChange={(e) => {
+            setSelectedGraph(e.target.value);
+            setSelectedInfo(null); // Clear other view when switching
+          }}
           defaultValue=""
         >
           <option value="" disabled>-- Select a Graph --</option>
-          <option value="bar">Bar Graph</option>
-          <option value="line">Line Graph</option>
-          <option value="scatter">Scatter Plot</option>
-          <option value="box">Box Plot</option>
+          <option value="Bar">Bar Graph</option>
+          <option value="Line">Line Graph</option>
+          <option value="Scatter">Scatter Plot</option>
+          <option value="Box">Box Plot</option>
         </select>
       </div>
 
@@ -90,13 +93,16 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
       <div className="dropdown-section">
         <label><strong>Data Info</strong></label>
         <select
-          onChange={(e) => console.log("Selected data info:", e.target.value)}
+          onChange={(e) => {
+            setSelectedInfo(e.target.value);
+            setSelectedGraph(null); // Clear other view when switching
+          }}
           defaultValue=""
         >
           <option value="" disabled>-- Choose info type --</option>
-          <option value="correlation">Correlation</option>
-          <option value="summary">Summary Stats</option>
-          <option value="cleaning">Data Cleaning</option>
+          <option value="Correlation">Correlation</option>
+          <option value="Summary">Summary Stats</option>
+          <option value="Cleaning">Data Cleaning</option>
         </select>
       </div>
 
