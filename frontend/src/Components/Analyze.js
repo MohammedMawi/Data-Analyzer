@@ -190,27 +190,6 @@ export default function Analyze() {
               <Table data={data} error={error}/>
             </div>
 
-          {/* {selectedGraph && (
-            <div className="analysis-view">
-              <h3>Graph View: {selectedGraph}</h3>
-              <p>(Placeholder for {selectedGraph} graph)</p>
-            </div>
-          )} */}
-
-          {/* {selectedGraph && (
-            <section className="analysis-view">
-              {!data ? (
-                <p>Loading data…</p>
-              ) : !targetColumn || !firstFeature ? (
-                <p>Please select a target column and at least one feature.</p>
-              ) : lineData.length === 0 || lineData[0].x.length === 0 ? (
-                <p>No numeric rows found for {targetColumn} vs {firstFeature}.</p>
-              ) : (
-                <GraphRenderer type="line" data={lineData} layout={lineLayout} />
-              )}
-            </section>
-          )} */}
-
           {selectedGraph && (
             <section className="analysis-view">
               {!data ? (
