@@ -82,10 +82,10 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
           defaultValue=""
         >
           <option value="" disabled>-- Select a Graph --</option>
-          <option value="Bar">Bar Graph</option>
-          <option value="Line">Line Graph</option>
-          <option value="Scatter">Scatter Plot</option>
-          <option value="Box">Box Plot</option>
+          <option value="bar">Bar Graph</option>
+          <option value="line">Line Graph</option>
+          <option value="scatter">Scatter Plot</option>
+          <option value="box">Box Plot</option>
         </select>
       </div>
 
@@ -100,9 +100,9 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
           defaultValue=""
         >
           <option value="" disabled>-- Choose info type --</option>
-          <option value="Correlation">Correlation</option>
-          <option value="Summary">Summary Stats</option>
-          <option value="Cleaning">Data Cleaning</option>
+          <option value="correlation">Correlation</option>
+          <option value="summary">Summary Stats</option>
+          <option value="cleaning">Data Cleaning</option>
         </select>
       </div>
 
