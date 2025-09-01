@@ -45,6 +45,42 @@ export default function Analyze() {
         });
     }, []);
 
+    //rows: array of data rows
+    //features: col name for x-axis (categorical)
+    //target: col name for y-axis (numeric)
+    //maxCats: max number of categories to include (default 20)
+    // For bar charts: compute mean(target) per feature category so we plot one bar per group, not one per row. E.g. mean house price per bedroom count
+    function groupMean(rows, features, target, maxCats = 20) {
+      const sum = new Map();    // key -> sum(y)
+      const count = new Map();  // key -> count
+
+      for (const r of rows) {
+        const y = Number(r[target]); // convert target value to number in each row
+        if (!Number.isFinite(y)) continue;
+
+        // treat the x value as a category label (string) for grouping
+        const key = String(r[features]);
+        sum.set(key, (sum.get(key) || 0) + y); //set the sum for this key to the current sum + y (or just y if no current sum) to track total y-values per category
+        count.set(key, (count.get(key) || 0) + 1); //set the count for this key to the current count + 1 (or just 1 if no current count) to track how many times each category appears
+      }
+
+      // turn sum map into array of 2-item arrays ([[key, mean], [key2, mean2]...]) pairs
+      let entries = Array.from(sum.entries()).map(([k, valSum]) => [k, valSum / count.get(k)]);
+
+      // Optionally trim to most frequent categories if too many
+      if (entries.length > maxCats) {
+        entries.sort((a, b) => (count.get(b[0]) || 0) - (count.get(a[0]) || 0)); //use sort method to sort entries by count descending using b-a
+        entries = entries.slice(0, maxCats); //keep only the most frequent features
+      }
+
+      // sort feat/key names numerically. a/b[0] refers to first element (features/keys) of each pair
+      entries.sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }));
+
+      const x = entries.map(([k]) => k); //create x array and extract first element of each pair
+      const y = entries.map(([, m]) => m); //create y array and extract second element of each pair
+      return { x, y }; //return the x and y arrays as an object
+    }
+
     // ---- Generic trace builder (supports line + scatter; easy to extend) ----
     const TRACE_KINDS = {
       line: (x, y, name) => ({
@@ -62,7 +98,12 @@ export default function Analyze() {
         marker: { size: 7 },
         name,
       }),
-      // bar: (x, y, name) => ({ x, y, type: "bar", name }), // <- add later if needed
+      bar: (x, y, name) => ({
+        x,
+        y,
+        type: "bar",
+        name,
+      })
     };
 
     //convert value to a number and return boolean indicating if it is a finite number
@@ -78,6 +119,19 @@ export default function Analyze() {
     function buildTraces(rows, target, features, kind) {
       const makeTrace = TRACE_KINDS[kind];
       if (!makeTrace || !rows || !target || !features?.length) return []; // Return empty if no valid trace kind or missing data
+
+      // Special path for bar: aggregate mean(target) per category of each feature
+      if (kind === "bar") {
+        return features
+          .map((feat) => {
+            const { x, y } = groupMean(rows, feat, target);
+            if (x.length === 0) return null;
+            // To avoid x-label collisions across different features, prefix with feature name when multiple features are selected
+            const labeledX = features.length > 1 ? x.map((v) => `${feat}: ${v}`) : x;
+            return makeTrace(labeledX, y, `${feat} → ${target}`);
+          })
+          .filter(Boolean);
+      }
 
       // loop through each feature to compare with target
       return features.map((feat) => {
@@ -119,28 +173,28 @@ export default function Analyze() {
       ];
     }
 
-    const firstFeature = featureColumns?.[0] ?? null;
+    const xName = featureColumns?.length === 1 ? featureColumns[0] : "Feature(s)";
 
     const lineData =
       selectedGraph === "line" &&
       data &&
       targetColumn &&
-      firstFeature
-        ? buildLineFromDataset(data.rows, firstFeature, targetColumn)
+      xName
+        ? buildLineFromDataset(data.rows, xName, targetColumn)
         : [];
 
     const lineLayout = {
       title: {
         text:
-          targetColumn && firstFeature
-            ? `${targetColumn} vs ${firstFeature}`
+          targetColumn && xName
+            ? `${targetColumn} vs ${xName}`
             : "Line Graph",
         font: { size: 20, color: "black" }, // Explicit font styling
         xref: 'paper',
         x: 0.5, // Center title
       },
       xaxis: {
-        title: { text: firstFeature || "Feature", font: { size: 16, color: "black" } }
+        title: { text: xName || "Feature", font: { size: 16, color: "black" } }
       },
       yaxis: {
         title: { text: targetColumn || "Target", font: { size: 16, color: "black" } }
@@ -158,16 +212,39 @@ export default function Analyze() {
         ? buildTraces(data.rows, targetColumn, featureColumns, selectedGraph)
         : [];
 
+    const kindLabel = selectedGraph === "scatter" ? "Scatter" : 
+                      selectedGraph === "bar"     ? "Bar"     : "Line";
+
     // (temporary) reuse your existing lineLayout, but update the title label by graph kind
     const graphLayout = {
       ...lineLayout,
+      barmode: selectedGraph === "bar" && featureColumns?.length > 1 ? "stack" : undefined,
       title: {
         ...(typeof lineLayout.title === "object" ? lineLayout.title : { text: lineLayout.title }),
         text:
           targetColumn && featureColumns?.length
-            ? `${selectedGraph === "scatter" ? "Scatter" : "Line"}: ${targetColumn} vs ${featureColumns.join(", ")}`
+            ? `${kindLabel}: ${targetColumn} vs ${featureColumns.join(", ")}`
             : (typeof lineLayout.title === "object" ? lineLayout.title.text : "Graph"),
       },
+      xaxis: {
+        ...(typeof lineLayout.xaxis === "object" ? lineLayout.xaxis : {}),
+        automargin: true,
+        title: {
+          text:
+            selectedGraph === "bar" 
+              ? (featureColumns?.length === 1 ? featureColumns[0] : "Feature Categories") 
+              : xName,
+        }
+      },
+      yaxis: {
+        ...(typeof lineLayout.yaxis === "object" ? lineLayout.yaxis : {}),
+        title: {
+          text: 
+            selectedGraph === "bar" 
+              ? `Mean ${targetColumn || "Target"}`
+              : `${targetColumn || "Target"}`
+        }
+      }
     };
 
   return (
