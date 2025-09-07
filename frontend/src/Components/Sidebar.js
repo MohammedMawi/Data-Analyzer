@@ -86,6 +86,7 @@ export default function Sidebar({columns, targetColumn, setTargetColumn, feature
           <option value="line">Line Graph</option>
           <option value="scatter">Scatter Plot</option>
           <option value="box">Box Plot</option>
+          <option value="hist">Histogram</option>
         </select>
       </div>
 

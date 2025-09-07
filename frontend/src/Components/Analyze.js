@@ -103,6 +103,25 @@ export default function Analyze() {
         y,
         type: "bar",
         name,
+      }),
+      box: (x, y, name) => ({
+        x,
+        y,
+        type: "box",
+        name,
+        boxpoints: "outliers",
+        jitter: 0.3,
+        whiskerwidth: 0.2,
+        marker: {size: 4},
+        line: {width: 1}
+      }),
+      hist: (x, y, name) => ({
+        x,
+        y,
+        type: "histogram",
+        name,
+        opacity: 0.6,
+        hoverlabel: { namelength: -1 }
       })
     };
 
@@ -118,7 +137,20 @@ export default function Analyze() {
     // kind: "line" or "scatter"
     function buildTraces(rows, target, features, kind) {
       const makeTrace = TRACE_KINDS[kind];
-      if (!makeTrace || !rows || !target || !features?.length) return []; // Return empty if no valid trace kind or missing data
+      if (!makeTrace || !rows) return []; // Return empty if no valid trace type or no data
+
+      //Histograms are used to show frequency of values in one or more columns not compare features vs target
+      if (kind === "hist") {
+        const cols = features?.length ? features : (target ? [target] : []); //if no features, use target as single column
+        return cols //map over each feature
+          .map((col) => {
+            // map over each row and use feature (aka col) to search for values in specified column in each row
+            const vals = rows.map(r => Number(r[col])).filter(v => Number.isFinite(v)); 
+            return vals.length === 0 ? null : makeTrace(vals, null, col); //if no valid values, return null; otherwise create trace with vals as x and null as y
+          }).filter(Boolean); //filter out any null traces
+      }
+
+      if (!target || !features?.length) return []; // Return empty if missing target or features
 
       // Special path for bar: aggregate mean(target) per category of each feature
       if (kind === "bar") {
@@ -128,9 +160,19 @@ export default function Analyze() {
             if (x.length === 0) return null;
             // To avoid x-label collisions across different features, prefix with feature name when multiple features are selected
             const labeledX = features.length > 1 ? x.map((v) => `${feat}: ${v}`) : x;
-            return makeTrace(labeledX, y, `${feat} → ${target}`);
+            return makeTrace(labeledX, y, feat);
           })
           .filter(Boolean);
+      }
+
+      if(kind === "box") {
+        return features.map((feat) => {
+          const pts = rows.filter((r) => Number.isFinite(Number(r[target]))); //filter dataset by rows where target column has a real value
+          const x = pts.map((r) => String(r[feat])); // extract x values as strings (categories)
+          const y = pts.map((r) => Number(r[target])); // extract y values as numbers (target values)
+          return x.length === 0 ? null : makeTrace(x, y, feat); 
+        })
+        .filter(Boolean);
       }
 
       // loop through each feature to compare with target
@@ -146,7 +188,7 @@ export default function Analyze() {
           if (x.length === 0) return null;
 
           // Return the actual trace object using the makeTrace helper for this graph type
-          return makeTrace(x, y, `${feat} → ${target}`);
+          return makeTrace(x, y, feat);
         })
         .filter(Boolean);
     }
@@ -204,34 +246,46 @@ export default function Analyze() {
     };
 
 
-    const graphData =
-      selectedGraph &&
-      data &&
-      targetColumn &&
-      featureColumns?.length
-        ? buildTraces(data.rows, targetColumn, featureColumns, selectedGraph)
-        : [];
+    let graphData = [];
+
+    if (selectedGraph && data) {
+      if (selectedGraph === "hist" && (featureColumns?.length || targetColumn)) {
+        graphData = buildTraces(data.rows, targetColumn, featureColumns, selectedGraph);
+      } else if (targetColumn && featureColumns?.length) {
+        graphData = buildTraces(data.rows, targetColumn, featureColumns, selectedGraph);
+      }
+    }
 
     const kindLabel = selectedGraph === "scatter" ? "Scatter" : 
-                      selectedGraph === "bar"     ? "Bar"     : "Line";
+                      selectedGraph === "bar"     ? "Bar"     : 
+                      selectedGraph === "box"     ? "Box Plot": 
+                      selectedGraph === "hist"     ? "Histogram"   : "Line";
+
+    const plottingCols = featureColumns?.length ? featureColumns : (targetColumn ? [targetColumn] : []);
 
     // (temporary) reuse your existing lineLayout, but update the title label by graph kind
     const graphLayout = {
       ...lineLayout,
-      barmode: selectedGraph === "bar" && featureColumns?.length > 1 ? "stack" : undefined,
+      barmode: selectedGraph === "bar" && featureColumns?.length > 1 ? "group" :
+               selectedGraph === "hist" && (plottingCols?.length ?? 0) > 1 ? "overlay" : undefined,
+      boxmode: selectedGraph === "box" && featureColumns?.length > 1 ? "group" : undefined,
       title: {
         ...(typeof lineLayout.title === "object" ? lineLayout.title : { text: lineLayout.title }),
         text:
-          targetColumn && featureColumns?.length
-            ? `${kindLabel}: ${targetColumn} vs ${featureColumns.join(", ")}`
-            : (typeof lineLayout.title === "object" ? lineLayout.title.text : "Graph"),
+          selectedGraph === "hist" 
+            ? `${kindLabel}: ${plottingCols.join(", ")}`
+              : targetColumn && featureColumns?.length
+              ? `${kindLabel}: ${targetColumn} vs ${featureColumns.join(", ")}`
+              : (typeof lineLayout.title === "object" ? lineLayout.title.text : "Graph"),
       },
       xaxis: {
         ...(typeof lineLayout.xaxis === "object" ? lineLayout.xaxis : {}),
         automargin: true,
         title: {
           text:
-            selectedGraph === "bar" 
+            selectedGraph === "hist" 
+              ? (plottingCols?.length === 1 ? plottingCols[0] : "Values")
+              : selectedGraph === "bar" || selectedGraph === "box"
               ? (featureColumns?.length === 1 ? featureColumns[0] : "Feature Categories") 
               : xName,
         }
@@ -240,7 +294,11 @@ export default function Analyze() {
         ...(typeof lineLayout.yaxis === "object" ? lineLayout.yaxis : {}),
         title: {
           text: 
-            selectedGraph === "bar" 
+            selectedGraph === "hist"
+              ? "Count"
+              : selectedGraph === "box"
+              ? `${targetColumn} Distribution`
+              : selectedGraph === "bar" 
               ? `Mean ${targetColumn || "Target"}`
               : `${targetColumn || "Target"}`
         }
@@ -271,10 +329,12 @@ export default function Analyze() {
             <section className="analysis-view">
               {!data ? (
                 <p>Loading data…</p>
-              ) : !targetColumn || !featureColumns?.length ? (
-                <p>Please select a target column and at least one feature.</p>
+              ) : selectedGraph !== "hist" && (!targetColumn || !featureColumns?.length) ? (
+                <p>Please select a target column and at least one feature</p>
+              ) : plottingCols.length === 0 ? (
+                <p>Please select at least one column (feature or target)</p>
               ) : graphData.length === 0 || graphData.every(t => !t || t.x?.length === 0) ? (
-                <p>No numeric pairs found for the selected columns.</p>
+                <p>No numeric pairs found for the selected columns</p>
               ) : (
                 <GraphRenderer type={selectedGraph} data={graphData} layout={graphLayout} />
               )}
