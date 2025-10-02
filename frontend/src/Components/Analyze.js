@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar";
 import Table from "./Table";
 import GraphRenderer from './GraphRenderer';
 import "../CSS/analyze.css";
+import DataInfo from './DataInfo';
 
 export default function Analyze() {
 
@@ -193,37 +194,7 @@ export default function Analyze() {
         .filter(Boolean);
     }
 
-    function buildLineFromDataset(rows, xKey, yKey) {
-      const xs = [];
-      const ys = [];
-      for (const r of rows) {
-        const x = Number(r[xKey]);
-        const y = Number(r[yKey]);
-        if (Number.isFinite(x) && Number.isFinite(y)) {
-          xs.push(x);
-          ys.push(y);
-        }
-      }
-      return [
-        {
-          x: xs,
-          y: ys,
-          type: "scatter",
-          mode: "lines+markers",
-          name: `${yKey} vs ${xKey}`,
-        },
-      ];
-    }
-
     const xName = featureColumns?.length === 1 ? featureColumns[0] : "Feature(s)";
-
-    const lineData =
-      selectedGraph === "line" &&
-      data &&
-      targetColumn &&
-      xName
-        ? buildLineFromDataset(data.rows, xName, targetColumn)
-        : [];
 
     const lineLayout = {
       title: {
@@ -342,10 +313,16 @@ export default function Analyze() {
           )}
 
           {selectedInfo && (
-            <div className="analysis-view">
-              <h3>Data Info View: {selectedInfo}</h3>
-              <p>(Placeholder for {selectedInfo} data info)</p>
-            </div>
+            selectedInfo === "summary" 
+            ? <DataInfo rows={data.rows} cols={data.columns}/>
+            : (
+              <section className="analysis-view">
+                <div className="info-card">
+                  <h3>Data Info: {selectedInfo}</h3>
+                  <p>Coming soon.</p>
+                </div>
+              </section>
+            )
           )}
         </div>
       </div>

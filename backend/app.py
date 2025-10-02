@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
-import openai
 
 app = Flask(__name__)
 CORS(app) # Allows cross-origin requests, which is useful for development purposes. Allows frontend (React) to communicate with backend (Flask) even if they are running on different ports or domains.
