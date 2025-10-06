@@ -67,7 +67,13 @@ export default function Analyze() {
           </div>
 
           {data && 
-            <GraphInfo data={data} rows={data.rows} selectedGraph={selectedGraph} featureColumns={featureColumns} targetColumn={targetColumn} />}
+            <GraphInfo 
+              data={data} 
+              rows={data.rows} 
+              selectedGraph={selectedGraph} 
+              featureColumns={featureColumns} 
+              targetColumn={targetColumn} 
+            />}
 
           {data && 
             <DataInfo selectedInfo={selectedInfo} rows={data.rows} cols={data.columns} />}
