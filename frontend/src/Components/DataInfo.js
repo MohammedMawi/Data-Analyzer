@@ -180,7 +180,18 @@ export default function DataInfo(props) {
 
     return (
         <>
-            {renderSummary(buildDatasetSummary(props.rows, props.cols))}
+            {props.selectedInfo && (
+              props.selectedInfo === "summary" 
+              ? renderSummary(buildDatasetSummary(props.rows, props.cols))
+              : (
+                <section className="analysis-view">
+                  <div className="info-card">
+                    <h3>Data Info: {props.selectedInfo}</h3>
+                    <p>Coming soon.</p>
+                  </div>
+                </section>
+              )
+            )}
         </>
     )
 }

@@ -312,18 +312,9 @@ export default function Analyze() {
             </section>
           )}
 
-          {selectedInfo && (
-            selectedInfo === "summary" 
-            ? <DataInfo rows={data.rows} cols={data.columns}/>
-            : (
-              <section className="analysis-view">
-                <div className="info-card">
-                  <h3>Data Info: {selectedInfo}</h3>
-                  <p>Coming soon.</p>
-                </div>
-              </section>
-            )
-          )}
+          {data && 
+            <DataInfo selectedInfo={selectedInfo} rows={data.rows} cols={data.columns} />}
+
         </div>
       </div>
     </>
