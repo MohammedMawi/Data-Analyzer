@@ -115,3 +115,38 @@
 .bar-fill.alt{
   background: linear-gradient(90deg, var(--accent3), var(--accent2));
 }
+
+/* grid of column cards */
+.col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+/* header row inside a column card */
+.col-card .col-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* small KPI row inside a column card */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 6px 0 8px;
+}
+.kpi .label { font-size: 12px; color: var(--muted); }
+.kpi .big { font-size: 18px; font-weight: 700; }
+
+/* grid for numeric stats */
+.num-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 12px;
+  margin-top: 6px;
+}
+.num-grid .label { font-size: 11px; color: var(--muted); }
+.num-grid .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
